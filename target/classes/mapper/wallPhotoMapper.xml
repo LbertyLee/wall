@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wall.mapper.wallPhotoMapper" >
+  <resultMap id="BaseResultMap" type="com.wall.domain.wallPhoto" >
+    <id column="id" property="id" />
+    <result column="user_id" property="userId" />
+    <result column="photo" property="photo" />
+    <result column="photo_time" property="photoTime"/>
+    <result column="photo_type" property="photoType" />
+    <result column="photo_like" property="photoLike" />
+    <result column="photo_comments" property="photoComments"/>
+    <result column="user_net_name" property="userNetName" />
+  </resultMap>
+
+  <insert id="insertWallPhoto" parameterType="com.wall.domain.wallPhoto" useGeneratedKeys="true" keyProperty="id">
+    insert  into wall_photo(
+    <if test="userId != null and userId != ''">user_id,</if>
+    <if test="photo != null and photo != ''">photo,</if>
+    <if test="photoType != null and photoType != ''">photo_type,</if>
+    photo_like,
+    <if test="userNetName != null and userNetName != ''">user_net_name,</if>
+    photo_comments,
+    photo_time
+    )
+    values (
+    <if test="userId != null and userId != ''">#{userId},</if>
+    <if test="photo != null and photo != ''">#{photo},</if>
+    <if test="photoType != null and photoType != ''">#{photoType},</if>
+    0,
+    <if test="userNetName != null and userNetName != ''">#{userNetName},</if>
+    0,
+    sysdate()
+    )
+  </insert>
+
+  <select id="selectWallPhoto" resultMap="BaseResultMap">
+    select  * from wall_photo
+  </select>
+
+  <select id="ByTypeGetMessage" resultMap="BaseResultMap">
+    select * from wall_photo where photo_type=#{photoType}
+  </select>
+
+  <update id="UpdatePhoto" parameterType="com.wall.domain.wallPhoto" >
+    update wall_photo set photo_comments=photo_comments+1
+    where id=#{Id}
+  </update>
+
+  <update id="UpdatePhotoComments" parameterType="integer" >
+    update wall_photo  set photo_comments=photo_comments-1
+    where id = (select photo_id from photo_comments where id=#{Id})
+  </update>
+
+
+  <update id="UpdateArticleLike" parameterType="com.wall.domain.wallPhoto" >
+    update wall_photo set photo_like=photo_like+1
+    where id=#{photoId}
+  </update>
+
+</mapper>

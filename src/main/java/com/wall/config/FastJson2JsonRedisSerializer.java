@@ -15,18 +15,18 @@ import java.nio.charset.Charset;
  * @author sc
  */
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T>
+
 {
-    @SuppressWarnings("unused")
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    @SuppressWarnings("unused")
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private Class<T> clazz;
 
     static
     {
         ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
-//        ParserConfig.getGlobalInstance().addAccept("com.wall.config");
     }
 
     public FastJson2JsonRedisSerializer(Class<T> clazz)
@@ -53,7 +53,6 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T>
             return null;
         }
         String str = new String(bytes, DEFAULT_CHARSET);
-
         return JSON.parseObject(str, clazz);
     }
 

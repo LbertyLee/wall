@@ -4,7 +4,6 @@ import com.wall.common.Result;
 import com.wall.common.ServletUtils;
 import com.wall.domain.LoginUser;
 import com.wall.domain.wallArticle;
-import com.wall.mapper.sysUserMapper;
 import com.wall.mapper.wallArticleMapper;
 import com.wall.system.wallArticleService;
 import com.wall.utils.Paging;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wall.mapper.PhotoCommentsMapper" >
+  <resultMap id="BaseResultMap" type="com.wall.domain.PhotoComments" >
+    <id column="id" property="id" />
+    <result column="photo_comments" property="photoComments" />
+    <result column="photo_id" property="photoId"  />
+    <result column="comment_user" property="commentUser"/>
+    <result column="comment_time" property="commentTime" />
+  </resultMap>
+
+  <insert id="insertPhotoComments" parameterType="int" useGeneratedKeys="true" keyProperty="id">
+    insert  into photo_comments(
+    <if test="photoComments != null and photoComments != ''">photo_comments,</if>
+    <if test="photoId != null and photoId != ''">photo_id,</if>
+    <if test="commentUser != null and commentUser != ''">comment_user,</if>
+    comment_time
+    )
+    values (
+    <if test="photoComments != null and photoComments != ''">#{photoComments},</if>
+    <if test="photoId != null and photoId != ''">#{photoId},</if>
+    <if test="commentUser != null and commentUser != ''">#{commentUser},</if>
+    sysdate()
+    )
+  </insert>
+
+  <select id="selectCommentsByPhotoId" parameterType="integer" resultMap="BaseResultMap">
+    select  * from photo_comments where photo_id=#{photoId}
+  </select>
+
+  <select id="selectComments" resultMap="BaseResultMap" >
+    select * from photo_comments where id=#{Id} and comment_user=#{CommentUser}
+  </select>
+
+  <select id="GetPhotoUser" resultType="long" parameterType="integer">
+    select su.user_id
+    from sys_user su
+           left  join wall_photo wa on wa.user_id=su.user_id
+           left join photo_comments ac on ac.photo_id=wa.id
+    where ac.id=#{Id}
+  </select>
+
+  <delete id="deleteCommentById" parameterType="integer" >
+    delete from  photo_comments where id=#{Id}
+  </delete>
+
+
+</mapper>
