@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wall.mapper.sysUserMapper">
+  <resultMap id="BaseResultMap" type="com.wall.domain.sysUser">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="user_net_name" jdbcType="VARCHAR" property="userNetName" />
+  </resultMap>
+
+  <select id="selectUserByUserName" resultType="com.wall.domain.sysUser">
+    select * from sys_user where user_name=#{username}
+  </select>
+
+  <sql id="selectUserVo">
+    select user_id,user_name,password,avatar,created_at,user_type ,user_net_name from sys_user
+  </sql>
+
+  <insert id="insertUser" parameterType="com.wall.domain.sysUser" useGeneratedKeys="true" keyProperty="userId">
+    insert into sys_user(
+    <if test="userName != null and userName != ''">user_name,</if>
+    <if test="password != null and password != ''">password,</if>
+    <if test="avatar != null and avatar != ''">avatar,</if>
+    <if test="userType != null and userType != ''">user_type,</if>
+    <if test="userNetName != null and userNetName != ''">user_net_name,</if>
+    created_at
+    )
+    values (
+    <if test="userName != null and userName != ''">#{userName},</if>
+    <if test="password != null and password != ''">#{password},</if>
+    <if test="avatar != null and avatar != ''">#{avatar},</if>
+    <if test="userType != null and userType != ''">common,</if>
+    <if test="userNetName != null and userNetName != ''">#{userNetName},</if>
+    sysdate()
+    )
+  </insert>
+
+
+  <select id="selectUserByUserId" resultMap="BaseResultMap">
+    <include refid="selectUserVo"></include>
+    where user_id = #{userId}
+  </select>
+
+  <update id="updateUserNetName" parameterType="com.wall.domain.sysUser" >
+    update sys_user
+    <set>
+      <if test="userId != null and userId != ''">user_id=#{userId},</if>
+      <if test="userName != null and userName != ''">user_name=#{userName},</if>
+      <if test="password != null and password != ''">password=#{password},</if>
+      <if test="avatar != null and avatar != ''">avatar=#{avatar},</if>
+      <if test="userType != null and userType != ''">user_type=#{userType},</if>
+      <if test="userNetName != null and userNetName != ''">user_net_name=#{userNetName},</if>
+      created_at=sysdate()
+    </set>
+    where user_id=#{userId}
+  </update>
+
+</mapper>

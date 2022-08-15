@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wall.mapper.ArticleCommentsMapper" >
+  <resultMap id="BaseResultMap" type="com.wall.domain.ArticleComments" >
+    <id column="id" property="id"  />
+    <result column="article_comments" property="articleComments"  />
+    <result column="article_id" property="articleId" />
+    <result column="comment_user" property="commentUser"/>
+    <result column="comment_time" property="commentTime" />
+  </resultMap>
+
+  <insert id="insertArticleComments" parameterType="int" useGeneratedKeys="true" keyProperty="id">
+    insert  into article_comments(
+    <if test="articleComments != null and articleComments != ''">article_comments,</if>
+    <if test="articleId != null and articleId != ''">article_id,</if>
+    <if test="commentUser != null and commentUser != ''">comment_user,</if>
+    comment_time
+    )
+    values (
+    <if test="articleComments != null and articleComments != ''">#{articleComments},</if>
+    <if test="articleId != null and articleId != ''">#{articleId},</if>
+    <if test="commentUser != null and commentUser != ''">#{commentUser},</if>
+            sysdate()
+    )
+  </insert>
+
+  <select id="selectComments" resultMap="BaseResultMap">
+    select * from article_comments where id=#{Id} and comment_user=#{CommentUser}
+  </select>
+
+  <select id="selectCommentsByArticleId" parameterType="integer" resultMap="BaseResultMap">
+    select  * from article_comments where article_id=#{articleId}
+  </select>
+
+  <delete id="deleteCommentById" parameterType="integer" >
+    delete from  article_comments where id=#{Id}
+  </delete>
+  
+
+
+  <select id="GetArticleUser" resultType="long" parameterType="integer">
+    select su.user_id
+    from sys_user su
+    left  join wall_article wa on wa.user_id=su.user_id
+    left join  article_comments ac on ac.article_id=wa.id
+    where ac.id=#{Id}
+  </select>
+
+</mapper>

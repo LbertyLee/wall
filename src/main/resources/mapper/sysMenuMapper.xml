@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wall.mapper.sysMenuMapper">
+  <resultMap id="SysMenuMap" type="com.wall.domain.sysMenu">
+    <id column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <id column="menu_name" jdbcType="INTEGER" property="menuName" />
+    <id column="parent_id" jdbcType="INTEGER" property="parentId" />
+  </resultMap>
+
+
+  <select id="selectMenuByParentId" parameterType="Integer" resultMap="SysMenuMap">
+    select * from sys_menu
+  </select>
+</mapper>

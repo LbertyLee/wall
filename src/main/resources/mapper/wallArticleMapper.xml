@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wall.mapper.wallArticleMapper" >
+  <resultMap id="BaseResultMap" type="com.wall.domain.wallArticle" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId"  />
+    <result column="article" property="article"  />
+    <result column="article_time" property="articleTime" />
+    <result column="article_type" property="articleType"  />
+    <result column="article_like" property="articleLike" />
+    <result column="article_comments" property="articleComments"  />
+    <result column="user_net_name" property="userNetName" />
+    <result column="color" property="color" />
+
+  </resultMap>
+  <sql id="selectWallArticle">
+    select id, user_id,article, article_time,article_type,article_like,article_comments,user_net_name,color from wall_article
+  </sql>
+
+  <select id="selectWallArticleByUserId" resultMap="BaseResultMap">
+    select * from wall_article where user_id=#{userId}
+  </select>
+
+  <select id="selectWallArticleById" parameterType="Long" resultMap="BaseResultMap">
+    select * from wall_article where id=#{Id}
+  </select>
+
+  <select id="selectWallArticle" resultMap="BaseResultMap">
+    select  * from wall_article
+  </select>
+
+  <select id="ByTypeGetMessage" resultMap="BaseResultMap">
+    select * from wall_article where article_type=#{articleType}
+  </select>
+
+  <insert id="insertWallArticle" parameterType="com.wall.domain.wallArticle" useGeneratedKeys="true" keyProperty="id">
+    insert  into wall_article(
+    <if test="userId != null and userId != ''">user_id,</if>
+    <if test="article != null and article != ''">article,</if>
+    <if test="articleType != null and articleType != ''">article_type,</if>
+article_like,
+    <if test="userNetName != null and userNetName != ''">user_net_name,</if>
+    <if test="color != null and color != ''">color,</if>
+   article_comments,
+    article_time
+    )
+    values (
+    <if test="userId != null and userId != ''">#{userId},</if>
+    <if test="article != null and article != ''">#{article},</if>
+    <if test="articleType != null and articleType != ''">#{articleType},</if>
+            0,
+    <if test="userNetName != null and userNetName != ''">#{userNetName},</if>
+    <if test="color != null and color != ''">#{color},</if>
+            0,
+    sysdate()
+    )
+  </insert>
+
+  <update id="batchNetNameStatus" >
+<foreach collection="wallArticleList" item="item" index="index" separator=";" >
+  update wall_article
+<set>
+  user_net_name=#{userNetName}
+</set>
+where user_id=#{item.userId}
+</foreach>
+    </update>
+
+  <update id="UpdateArticle" parameterType="com.wall.domain.wallArticle" >
+    update wall_article set article_comments=article_comments+1
+    where id=#{Id}
+  </update>
+
+  <update id="UpdateArticleLike" parameterType="com.wall.domain.wallArticle" >
+    update wall_article set article_like=article_like+1
+    where id=#{articleId}
+  </update>
+
+    <update id="UpdateArticleComments" parameterType="integer" >
+        update wall_article  set article_comments=article_comments-1
+        where id = (select article_id from article_comments where id=#{Id})
+    </update>
+
+</mapper>
