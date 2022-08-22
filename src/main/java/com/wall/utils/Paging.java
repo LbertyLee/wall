@@ -11,9 +11,6 @@ import java.util.Map;
 
 @Component
 public class Paging {
-
-
-
     public void setStartPage(Integer page){
         PageHelper.startPage(page,2);
     }
